@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "batchTwat", "batchTwat\batchTwat.csproj", "{F4D5BE4E-CC71-4D9B-9506-B9ED5954E0DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4D5BE4E-CC71-4D9B-9506-B9ED5954E0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D5BE4E-CC71-4D9B-9506-B9ED5954E0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D5BE4E-CC71-4D9B-9506-B9ED5954E0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D5BE4E-CC71-4D9B-9506-B9ED5954E0DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
