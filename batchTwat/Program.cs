@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace batchTwat
 {
@@ -7,17 +9,76 @@ namespace batchTwat
     {
         static void Main(string[] args)
         {
-            foreach (DirectoryInfo di in new DirectoryInfo(Directory.GetCurrentDirectory()).GetDirectories())
+            if (args[0] == "-e")
             {
-                foreach (DirectoryInfo pdi in di.GetDirectories("PIX*"))
+                foreach(string file in Directory.EnumerateFiles(Directory.GetCurrentDirectory(),"*.twt", SearchOption.AllDirectories))
                 {
-                    rePIXIE(pdi);
+                    Console.WriteLine("Untwattimg: " + file);
+                    unTWaT(file);
                 }
 
-                reTWaT(di);
+                Console.Read();
+            }
+            else
+            {
+                foreach (DirectoryInfo di in new DirectoryInfo(Directory.GetCurrentDirectory()).GetDirectories())
+                {
+                    foreach (DirectoryInfo pdi in di.GetDirectories("PIX*"))
+                    {
+                        rePIXIE(pdi);
+                    }
+
+                    reTWaT(di);
+                }
             }
         }
+        public static void unTWaT(string file)
+        {
+            using (BinaryReader br = new BinaryReader(new FileStream(file, FileMode.Open)))
+            {
+                br.ReadInt32();
+                int numFiles = br.ReadInt32();
+                List<string> files = new List<string>();
+                List<int> filesizes = new List<int>();
+                for(int i=0;i<numFiles;i++)
+                {
+                    int size = br.ReadInt32();
+                    filesizes.Add(size);
 
+                    StringBuilder filename = new StringBuilder();
+                    while (true)
+                    {
+                        char letter = br.ReadChar();
+                        if (letter == char.MinValue) break;
+                        filename.Append(letter);
+                    }
+                    files.Add(filename.ToString());
+                    Console.WriteLine(i.ToString() + ":\t" + filename + "\t" + size);
+                    for (int c= filename.Length; c < 51; c++)
+                    {
+                        br.ReadByte();
+                    }
+                }
+                string targetDirectory = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file));
+                if (!Directory.Exists(targetDirectory))
+                    Directory.CreateDirectory(targetDirectory);
+                for(int i =0; i < numFiles;i++)
+                {
+                    string targetFilename = Path.Combine(targetDirectory, files[i]);
+                    using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(targetFilename)))
+                    {
+                        bw.Write(br.ReadBytes(filesizes[i]));
+                        if (filesizes[i] % 4 != 0)
+                        {
+                            for (int x = filesizes[i] % 4; x < 4; x++)
+                            {
+                                br.ReadByte();
+                            }
+                        }
+                    }
+                }
+            }
+        }
         public static void reTWaT(DirectoryInfo di)
         {
             string dest = di.Parent.FullName + "\\" + di.Name + ".twt";
